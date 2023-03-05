@@ -22,7 +22,7 @@ app = Flask(__name__)
 line_bot_api = LineBotApi(os.environ['LINE_CHANNEL_ACCESS_TOKEN'])
 handler = WebhookHandler(os.environ['LINE_CHANNEL_SECRET'])
 
-models = OpenAIModel(api_key=os.environ['OPENAI_API'], model_engine=os.os.environ['OPENAI_MODEL_ENGINE'])
+models = OpenAIModel(api_key=os.environ['OPENAI_API'], model_engine=os.environ['OPENAI_MODEL_ENGINE'])
 
 memory = Memory(system_message=os.environ['SYSTEM_MESSAGE'])
 chatgpt = ChatGPT(models, memory)
