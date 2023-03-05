@@ -19,12 +19,12 @@ from src.logger import logger
 load_dotenv('.env')
 
 app = Flask(__name__)
-line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
-handler = WebhookHandler(os.getenv('LINE_CHANNEL_SECRET'))
+line_bot_api = LineBotApi(os.environ['LINE_CHANNEL_ACCESS_TOKEN'])
+handler = WebhookHandler(os.environ['LINE_CHANNEL_SECRET'])
 
-models = OpenAIModel(api_key=os.getenv('OPENAI_API'), model_engine=os.getenv('OPENAI_MODEL_ENGINE'))
+models = OpenAIModel(api_key=os.environ['OPENAI_API'], model_engine=os.os.environ['OPENAI_MODEL_ENGINE'])
 
-memory = Memory(system_message=os.getenv('SYSTEM_MESSAGE'))
+memory = Memory(system_message=os.environ['SYSTEM_MESSAGE'])
 chatgpt = ChatGPT(models, memory)
 dalle = DALLE(models)
 
