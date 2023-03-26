@@ -33,8 +33,8 @@ website = Website()
 
 memory = Memory(system_message=os.getenv('SYSTEM_MESSAGE'), memory_message_count=2)
 model_management = {}
-api_key = os.getenv('OPENAI_API')
-#api_keys = {}
+#api_key = os.getenv('OPENAI_API')
+api_keys = {}
 
 
 @app.route("/callback", methods=['POST'])
@@ -94,6 +94,7 @@ def handle_text_message(event):
             memory.append(user_id, 'assistant', url)
 
         else:
+            api_key = os.getenv('OPENAI_API')
             model = OpenAIModel(api_key=api_key)
             model_management[user_id] = model
             user_model = model_management[user_id]
