@@ -97,7 +97,7 @@ def handle_text_message(event):
             api_key = os.getenv('OPENAI_API')
             model = OpenAIModel(api_key=api_key)
             model_management[user_id] = model
-             storage.save({
+            storage.save({
                 user_id: api_key
             })
             user_model = model_management[user_id]
