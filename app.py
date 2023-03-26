@@ -15,9 +15,7 @@ import uuid
 from src.models import OpenAIModel
 from src.memory import Memory
 from src.logger import logger
-#from src.storage import Storage, FileStorage, MongoStorage
-from azure.identity import DefaultAzureCredential
-from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
+from src.storage import Storage, FileStorage, MongoStorage
 from src.utils import get_role_and_content
 from src.service.youtube import Youtube, YoutubeTranscriptReader
 from src.service.website import Website, WebsiteReader
@@ -26,7 +24,6 @@ from src.mongodb import mongodb
 load_dotenv('.env')
 
 app = Flask(__name__)
-blob_service_client = BlobServiceClient(account_url=os.getenv('AZURE_STORAGE_Account_Url'), credential=os.getenv('AZURE_STORAGE_CONNECTION_Credential'))
 line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
 handler = WebhookHandler(os.getenv('LINE_CHANNEL_SECRET'))
 storage = None
@@ -100,9 +97,11 @@ def handle_text_message(event):
             api_key = os.getenv('OPENAI_API')
             model = OpenAIModel(api_key=api_key)
             model_management[user_id] = model
+            '''
             storage.save({
                 user_id: api_key
             })
+            '''
             user_model = model_management[user_id]
             memory.append(user_id, 'user', text)
             url = website.get_url_from_text(text)
@@ -201,11 +200,7 @@ if __name__ == "__main__":
         data = storage.load()
         for user_id in data.keys():
             model_management[user_id] = OpenAIModel(api_key=data[user_id])
+            print(user_id)
     except FileNotFoundError:
         pass
-    try:
-        all_containers = blob_service_client.list_containers(include_metadata=True)
-        for container in all_containers:
-            print(container['name'], container['metadata'])
-
     app.run(host='0.0.0.0', port=8080)
