@@ -94,6 +94,8 @@ def handle_text_message(event):
             memory.append(user_id, 'assistant', url)
 
         else:
+            model = OpenAIModel(api_key)
+            model_management[user_id] = model
             user_model = model_management[user_id]
             memory.append(user_id, 'user', text)
             url = website.get_url_from_text(text)
