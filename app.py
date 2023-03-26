@@ -198,9 +198,9 @@ if __name__ == "__main__":
         storage = Storage(FileStorage('db.json'))
     try:
         data = storage.load()
+        print(data)
         for user_id in data.keys():
             model_management[user_id] = OpenAIModel(api_key=data[user_id])
-            print(user_id)
     except FileNotFoundError:
         pass
     app.run(host='0.0.0.0', port=8080)
