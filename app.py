@@ -26,6 +26,7 @@ from src.mongodb import mongodb
 load_dotenv('.env')
 
 app = Flask(__name__)
+blob_service_client = BlobServiceClient(account_url=os.getenv('AZURE_STORAGE_Account_Url'), credential=os.getenv('AZURE_STORAGE_CONNECTION_Credential'))
 line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
 handler = WebhookHandler(os.getenv('LINE_CHANNEL_SECRET'))
 storage = None
@@ -202,4 +203,9 @@ if __name__ == "__main__":
             model_management[user_id] = OpenAIModel(api_key=data[user_id])
     except FileNotFoundError:
         pass
+    try:
+        all_containers = blob_service_client.list_containers(include_metadata=True)
+        for container in all_containers:
+            print(container['name'], container['metadata'])
+
     app.run(host='0.0.0.0', port=8080)
