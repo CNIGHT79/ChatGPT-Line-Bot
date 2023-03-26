@@ -6,6 +6,8 @@
 
 
 ## 更新
+- 2023/03/23 更新總結 Youtube 影片內容、新聞文章（支援：聯合報、Yahoo 新聞、三立新聞網、中央通訊社、風傳媒、TVBS、自由時報、ETtoday、中時新聞網、Line 新聞、台視新聞網）
+- 2023/03/18 新增 Whipser 服務、用戶可以新增自己的 Token、新增指令（參考文件下方）
 - 2023/03/03 模型換成 chat completion: `gpt-3.5-turbo`
 
 
@@ -47,19 +49,16 @@
 1. 環境變數設定
     1. 接續上一步 `Import` 完成後在 `Replit` 的專案管理頁面左下方 `Tools` 點擊 `Secrets`。
     2. 右方按下 `Got it` 後，即可新增環境變數，需新增：
-        1. OpenAI API Token：
-            - key: `OPENAI_API`
-            - value: `[由上方步驟一取得]`
-        2. 欲選擇的模型：
+        1. 欲選擇的模型：
             - key: `OPENAI_MODEL_ENGINE`
             - value: `gpt-3.5-turbo`  
-        3. ChatGPT 要讓助理扮演的角色詞（目前官方無釋出更多的使用方法，由玩家自行測試）
+        2. ChatGPT 要讓助理扮演的角色詞（目前官方無釋出更多的使用方法，由玩家自行測試）
             - key: `SYSTEM_MESSAGE`
             - value: `You are a helpful assistant.`
-        4. Line Channel Secret:
+        3. Line Channel Secret:
             - key: `LINE_CHANNEL_SECRET`
             - value: `[由步驟一取得]`
-        5. Line Channel Access Token:
+        4. Line Channel Access Token:
             - key: `LINE_CHANNEL_ACCESS_TOKEN`
             - value: `[由步驟一取得]`
 2. 開始執行
@@ -81,7 +80,18 @@
 
 | 指令 | 說明 |
 | --- | ----- |
-| `/imagine` | 在輸入框輸入 `/imagine` + 文字，就會調用 DALL·E 2 模型，即可生成圖像。|
+| `/註冊` | 在輸入框輸入 `/註冊 ` + OpenAI API Token，就可以註冊 Token|
+| `/系統訊息` | 在輸入框輸入 `/系統訊息 ` + 可以設定希望 ChatGPT 扮演什麼角色|
+| `/清除` | 在輸入框輸入 `/清除 `，就可以清除歷史訊息|
+| `/圖像` | 在輸入框輸入 `/圖像` + 指令，就會調用 DALL·E 2 模型，即可生成圖像。|
+| 語音輸入 | 利用語音輸入，系統會自動將語音翻譯成文字，並且 ChatGPT 以文字回應| 
+| 其他文字輸入 | 直接輸入文字，則會進入一般的 ChatGPT 對話模式|
+
+
+## 支持我們
+如果你喜歡這個專案，願意[支持我們](https://www.buymeacoffee.com/explainthis)，可以請我們喝一杯咖啡，這會成為我們繼續前進的動力！
+
+[<a href="https://www.buymeacoffee.com/explainthis" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="45px" width="162px" alt="Buy Me A Coffee"></a>](https://www.buymeacoffee.com/explainthis)
 
 ## 相關專案
 - [gpt-ai-assistant](https://github.com/memochou1993/gpt-ai-assistant)
