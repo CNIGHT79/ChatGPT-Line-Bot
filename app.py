@@ -33,7 +33,7 @@ website = Website()
 
 memory = Memory(system_message=os.getenv('SYSTEM_MESSAGE'), memory_message_count=2)
 model_management = {}
-api_key=os.getenv('OPENAI_API'), model_engine=os.getenv('OPENAI_MODEL_ENGINE')
+api_keys = {os.getenv('OPENAI_API')}
 #api_keys = {}
 
 
