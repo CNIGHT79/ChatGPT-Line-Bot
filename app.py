@@ -217,4 +217,7 @@ if __name__ == "__main__":
         Azblob = azblob()
         try:
             Azblob.getClient(os.getenv('SAS_URI'))
+        except Exception as e:
+            print(e)
+            
     app.run(host='0.0.0.0', port=8080)
