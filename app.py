@@ -59,6 +59,7 @@ def handle_text_message(event):
     api_key = os.getenv('OPENAI_API')
     model = OpenAIModel(api_key=api_key)
     model_management[user_id] = model
+    print("model dict", model_management)
     
     try:
         if text.startswith('/註冊'):
@@ -106,7 +107,11 @@ def handle_text_message(event):
             model_management[user_id] = model
             '''
             user_model = model_management[user_id]
-            memory.append(user_id, 'user', text)
+            try:
+                memory.append(user_id, 'user', text)
+            except Exception as e:
+                print(e)
+                
             url = website.get_url_from_text(text)
             if url:
                 if youtube.retrieve_video_id(text):
