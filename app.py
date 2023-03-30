@@ -20,6 +20,7 @@ from src.utils import get_role_and_content
 from src.service.youtube import Youtube, YoutubeTranscriptReader
 from src.service.website import Website, WebsiteReader
 #from src.mongodb import mongodb
+from src.azblob import azblob
 
 load_dotenv('.env')
 
@@ -207,4 +208,8 @@ if __name__ == "__main__":
     except FileNotFoundError:
         pass
     '''
+    if os.getenv('SAS_URI'):
+        Azblob = azblob()
+        try:
+            Azblob.getClient(os.getenv('SAS_URI'))
     app.run(host='0.0.0.0', port=8080)
