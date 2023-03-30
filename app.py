@@ -15,11 +15,11 @@ import uuid
 from src.models import OpenAIModel
 from src.memory import Memory
 from src.logger import logger
-#from src.storage import Storage, FileStorage, MongoStorage
+from src.storage import Storage, FileStorage, MongoStorage
 from src.utils import get_role_and_content
 from src.service.youtube import Youtube, YoutubeTranscriptReader
 from src.service.website import Website, WebsiteReader
-#from src.mongodb import mongodb
+from src.mongodb import mongodb
 
 load_dotenv('.env')
 
@@ -56,8 +56,9 @@ def handle_text_message(event):
     text = event.message.text.strip()
     logger.info(f'{user_id}: {text}')
     model = OpenAIModel(api_key=os.getenv('OPENAI_API'))
-    print(model)
+    print("###########",model)
     model_management[user_id] = model
+    print("###########",model_management)
 
     try:
         if text.startswith('/註冊'):
@@ -103,8 +104,8 @@ def handle_text_message(event):
             #api_key = os.getenv('OPENAI_API')
             #model = OpenAIModel(api_key=api_key)
             #model_management[user_id] = model
-
-            user_model = model_management[user_id]
+            try:
+                user_model = model_management[user_id]
             memory.append(user_id, 'user', text)
             url = website.get_url_from_text(text)
             if url:
