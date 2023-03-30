@@ -236,7 +236,11 @@ if __name__ == "__main__":
         Azblob = azblob()
         try:
             blob_client = Azblob.getClient(os.getenv('SAS_URI'))
-            data = Azblob.load_data(blob_client)
+            if blob_client.exists():
+                data = Azblob.load_data(blob_client)
+            else:
+                blob_client.upload_blob("")
+            
             for  user_id in data.keys():
                 print("user_id",user_id)
                 model_management[user_id] = OpenAIModel(api_key=data[user_id])
