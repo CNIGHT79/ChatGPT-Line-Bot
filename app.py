@@ -15,11 +15,11 @@ import uuid
 from src.models import OpenAIModel
 from src.memory import Memory
 from src.logger import logger
-from src.storage import Storage, FileStorage, MongoStorage
+#from src.storage import Storage, FileStorage, MongoStorage
 from src.utils import get_role_and_content
 from src.service.youtube import Youtube, YoutubeTranscriptReader
 from src.service.website import Website, WebsiteReader
-from src.mongodb import mongodb
+#from src.mongodb import mongodb
 
 load_dotenv('.env')
 
@@ -55,7 +55,10 @@ def handle_text_message(event):
     user_id = event.source.user_id
     text = event.message.text.strip()
     logger.info(f'{user_id}: {text}')
-
+    api_key = os.getenv('OPENAI_API')
+    model = OpenAIModel(api_key=api_key)
+    model_management[user_id] = model
+    
     try:
         if text.startswith('/註冊'):
             api_key = text[3:].strip()
@@ -64,9 +67,11 @@ def handle_text_message(event):
             if not is_successful:
                 raise ValueError('Invalid API token')
             model_management[user_id] = model
+            '''
             storage.save({
                 user_id: api_key
             })
+            '''
             msg = TextSendMessage(text='Token 有效，註冊成功')
 
         elif text.startswith('/指令說明'):
@@ -94,13 +99,10 @@ def handle_text_message(event):
             memory.append(user_id, 'assistant', url)
 
         else:
+            '''
             api_key = os.getenv('OPENAI_API')
             model = OpenAIModel(api_key=api_key)
             model_management[user_id] = model
-            '''
-            storage.save({
-                user_id: api_key
-            })
             '''
             user_model = model_management[user_id]
             memory.append(user_id, 'user', text)
@@ -191,6 +193,7 @@ def home():
 
 
 if __name__ == "__main__":
+    '''
     if os.getenv('USE_MONGO'):
         mongodb.connect_to_database()
         storage = Storage(MongoStorage(mongodb.db))
@@ -203,4 +206,5 @@ if __name__ == "__main__":
             model_management[user_id] = OpenAIModel(api_key=data[user_id])
     except FileNotFoundError:
         pass
+    '''
     app.run(host='0.0.0.0', port=8080)
