@@ -56,10 +56,29 @@ def handle_text_message(event):
     user_id = event.source.user_id
     text = event.message.text.strip()
     logger.info(f'{user_id}: {text}')
+    if user_id not in model_management:
+        api_key = os.getenv('OPENAI_API')
+        model = OpenAIModel(api_key=api_key)
+        model_management[user_id] = model
+        print("###model_management###",model_management)
+
+        try:
+            for key, value in data.items():
+                Azblob.add_data(key, value)
+            updated_data = Azblob.get_data()
+            Azblob.save_data(blob_client, updated_data)
+        except Exception as e:
+            print(e)
+
+    else:
+        api_key = model_management[user_id]
+        
+    '''
     api_key = os.getenv('OPENAI_API')
     model = OpenAIModel(api_key=api_key)
     model_management[user_id] = model
     print("model dict", model_management)
+    '''
     
     try:
         if text.startswith('/註冊'):
@@ -216,8 +235,12 @@ if __name__ == "__main__":
     if os.getenv('SAS_URI'):
         Azblob = azblob()
         try:
-            Azblob.getClient(os.getenv('SAS_URI'))
+            blob_client = Azblob.getClient(os.getenv('SAS_URI'))
+            data = Azblob.load_data(blob_client)
+            for  user_id in data.keys():
+                print("user_id",user_id)
+                model_management[user_id] = OpenAIModel(api_key=data[user_id])
         except Exception as e:
             print(e)
-            
+
     app.run(host='0.0.0.0', port=8080)
