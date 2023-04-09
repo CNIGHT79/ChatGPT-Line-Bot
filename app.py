@@ -68,7 +68,7 @@ def handle_text_message(event):
             Azblob.save_data(blob_client, updated_data)
 
         except Exception as e:
-            print("##########",e)
+            print("#####save_api_key_error#####",e)
             pass
 
         model = OpenAIModel(api_key=api_key)
@@ -77,7 +77,7 @@ def handle_text_message(event):
 
         
     else:
-        model = OpenAIModel(api_key=api_keys[user_id])
+        model = model_management[user_id]
         
     try:
         if text.startswith('/註冊'):
