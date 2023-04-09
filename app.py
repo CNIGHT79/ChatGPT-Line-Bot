@@ -61,7 +61,7 @@ def handle_text_message(event):
         model = OpenAIModel(api_key=api_key)
         model_management[user_id] = model
         print("###model_management###",model_management)
-
+        Azblob = azblob()
         try:
             for key, value in model_management.items():
                 Azblob.add_data(key, value)
