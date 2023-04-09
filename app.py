@@ -236,6 +236,7 @@ if __name__ == "__main__":
         try:
             Azblob = azblob()
             blob_client = Azblob.getClient(os.getenv('AZURE_STORAGE_Account_Url'))
+            
             if blob_client.exists():
                 api_keys = Azblob.load_data(blob_client)
                 for user_id in api_keys.keys():
