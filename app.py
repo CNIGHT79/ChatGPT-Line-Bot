@@ -239,7 +239,6 @@ if __name__ == "__main__":
             else:
                 blob_client.upload_blob("")
 
-
         except Exception as e:
             print("Failed to load blob...")
 
