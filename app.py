@@ -54,17 +54,16 @@ def handle_text_message(event):
     user_id = event.source.user_id
     text = event.message.text.strip()
     logger.info(f'{user_id}: {text}')
+
     if user_id not in model_management:
         api_key = os.getenv('OPENAI_API')
-        model = OpenAIModel(api_key=api_key)
-        model_management[user_id] = model
-        print("###model_management###",model_management)
-
+        api_keys[user_id] = api_key
+        #Recording the api_key        
         try:
-            Azblob = azblob()
-            blob_client = Azblob.getClient(os.getenv('AZURE_STORAGE_Account_Url'))
+            #Azblob = azblob()
+            #blob_client = Azblob.getClient(os.getenv('AZURE_STORAGE_Account_Url'))
 
-            for key, value in model_management.items():
+            for key, value in api_keys.items():
                 Azblob.add_data(key, value)
             updated_data = Azblob.get_data()
             Azblob.save_data(blob_client, updated_data)
@@ -72,8 +71,14 @@ def handle_text_message(event):
         except Exception as e:
             print(e)
             pass
+
+        model = OpenAIModel(api_key=api_key)
+        model_management[user_id] = model
+        print("###model_management###",model_management)
+
+        
     else:
-        api_key = model_management[user_id]
+        model = OpenAIModel(api_key=api_keys[user_id])
         
     try:
         if text.startswith('/註冊'):
@@ -227,18 +232,20 @@ if __name__ == "__main__":
     except FileNotFoundError:
         pass
     '''
-    
-    try:
-        Azblob = azblob()
-        blob_client = Azblob.getClient(os.getenv('AZURE_STORAGE_Account_Url'))
-        if blob_client.exists():
-            data = Azblob.load_data(blob_client)
-            for user_id in data.keys():
-                print("user_id",user_id)
-                model_management[user_id] = OpenAIModel(api_key=data[user_id])
-        else:
-            blob_client.upload_blob("")
-    except Exception as e:
-        print("Failed to load blob...")
+    if os.getenv('AZURE_STORAGE_Account_Url'):
+        try:
+            Azblob = azblob()
+            blob_client = Azblob.getClient(os.getenv('AZURE_STORAGE_Account_Url'))
+            if blob_client.exists():
+                api_keys = Azblob.load_data(blob_client)
+                for user_id in api_keys.keys():
+                    print("user_id",user_id)
+                    model_management[user_id] = OpenAIModel(api_key=api_keys[user_id])
+            else:
+                blob_client.upload_blob("")
+
+        except Exception as e:
+            print("Failed to load blob...")
+            pass
 
     app.run(host='0.0.0.0', port=8080)
