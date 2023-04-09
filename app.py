@@ -31,12 +31,17 @@ storage = None
 youtube = Youtube(step=4)
 website = Website()
 
+ if os.getenv('SAS_URI'):
+    try:
+        Azblob = azblob()
+        blob_client = Azblob.getClient(os.getenv('SAS_URI'))
+    except Exception as e:
+        print(e)
 
 memory = Memory(system_message=os.getenv('SYSTEM_MESSAGE'), memory_message_count=2)
 model_management = {}
 #api_key = os.getenv('OPENAI_API')
 api_keys = {}
-
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -61,7 +66,7 @@ def handle_text_message(event):
         model = OpenAIModel(api_key=api_key)
         model_management[user_id] = model
         print("###model_management###",model_management)
-        Azblob = azblob()
+        
         try:
             for key, value in model_management.items():
                 Azblob.add_data(key, value)
@@ -225,21 +230,16 @@ if __name__ == "__main__":
     except FileNotFoundError:
         pass
     '''
-    if os.getenv('SAS_URI'):
-        Azblob = azblob()
-        blob_client = Azblob.getClient(os.getenv('SAS_URI'))
-        try:
-            if blob_client.exists():
-                data = Azblob.load_data(blob_client)
-            
+    
+    try:
+        if blob_client.exists():
+            data = Azblob.load_data(blob_client)
             for user_id in data.keys():
                 print("user_id",user_id)
                 model_management[user_id] = OpenAIModel(api_key=data[user_id])
-
-            else:
-                blob_client.upload_blob("")
-
-        except Exception as e:
-            print("Failed to load blob...")
+        else:
+            blob_client.upload_blob("")
+    except Exception as e:
+        print("Failed to load blob...")
 
     app.run(host='0.0.0.0', port=8080)
