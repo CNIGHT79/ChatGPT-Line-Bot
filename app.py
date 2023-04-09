@@ -31,7 +31,6 @@ storage = None
 youtube = Youtube(step=4)
 website = Website()
 
-
 try:
     Azblob = azblob()
     blob_client = Azblob.getClient(os.getenv('SAS_URI'))
