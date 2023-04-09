@@ -60,16 +60,15 @@ def handle_text_message(event):
         api_keys[user_id] = api_key
         #Recording the api_key        
         try:
-            #Azblob = azblob()
-            #blob_client = Azblob.getClient(os.getenv('AZURE_STORAGE_Account_Url'))
-
+            Azblob = azblob()
+            blob_client = Azblob.getClient(os.getenv('AZURE_STORAGE_Account_Url'))
             for key, value in api_keys.items():
                 Azblob.add_data(key, value)
             updated_data = Azblob.get_data()
             Azblob.save_data(blob_client, updated_data)
 
         except Exception as e:
-            print(e)
+            print("##########",e)
             pass
 
         model = OpenAIModel(api_key=api_key)
@@ -236,7 +235,7 @@ if __name__ == "__main__":
         try:
             Azblob = azblob()
             blob_client = Azblob.getClient(os.getenv('AZURE_STORAGE_Account_Url'))
-            
+
             if blob_client.exists():
                 api_keys = Azblob.load_data(blob_client)
                 for user_id in api_keys.keys():
