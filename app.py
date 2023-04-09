@@ -234,8 +234,8 @@ if __name__ == "__main__":
     '''
     if os.getenv('SAS_URI'):
         Azblob = azblob()
+        blob_client = Azblob.getClient(os.getenv('SAS_URI'))
         try:
-            blob_client = Azblob.getClient(os.getenv('SAS_URI'))
             if blob_client.exists():
                 data = Azblob.load_data(blob_client)
             else:

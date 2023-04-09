@@ -1,5 +1,5 @@
 from azure.identity import DefaultAzureCredential
-from azure.storage.blob import BlobServiceClient, BlobClient
+from azure.storage.blob import BlobServiceClient
 import json
 token_credential = DefaultAzureCredential()
 
@@ -12,7 +12,11 @@ class azblob():
     def getClient(self,sas_url):
         self.blob_service_client = BlobServiceClient(account_url = sas_url, token_credential = DefaultAzureCredential())
         self.blob_client = self.blob_service_client.get_blob_client(container=self.container_name, blob=self.blob_name)
-        return self.blob_client
+        try:
+             print("####Find blob_client####")
+             return self.blob_client
+        except ResourceNotFoundError:
+            print("No blob found.")
 
     def load_data(self,blob_client):
         self.blob_data = blob_client.download_blob().readall()
