@@ -31,12 +31,13 @@ storage = None
 youtube = Youtube(step=4)
 website = Website()
 
- if os.getenv('SAS_URI'):
-    try:
-        Azblob = azblob()
-        blob_client = Azblob.getClient(os.getenv('SAS_URI'))
-    except Exception as e:
-        print(e)
+
+try:
+    Azblob = azblob()
+    blob_client = Azblob.getClient(os.getenv('SAS_URI'))
+except Exception as e:
+    print(e)
+    pass
 
 memory = Memory(system_message=os.getenv('SYSTEM_MESSAGE'), memory_message_count=2)
 model_management = {}
@@ -66,7 +67,7 @@ def handle_text_message(event):
         model = OpenAIModel(api_key=api_key)
         model_management[user_id] = model
         print("###model_management###",model_management)
-        
+
         try:
             for key, value in model_management.items():
                 Azblob.add_data(key, value)
@@ -74,7 +75,7 @@ def handle_text_message(event):
             Azblob.save_data(blob_client, updated_data)
         except Exception as e:
             print(e)
-
+            pass
     else:
         api_key = model_management[user_id]
         
