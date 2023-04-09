@@ -63,7 +63,7 @@ def handle_text_message(event):
         print("###model_management###",model_management)
 
         try:
-            for key, value in data.items():
+            for key, value in model_management.items():
                 Azblob.add_data(key, value)
             updated_data = Azblob.get_data()
             Azblob.save_data(blob_client, updated_data)
@@ -73,13 +73,6 @@ def handle_text_message(event):
     else:
         api_key = model_management[user_id]
         
-    '''
-    api_key = os.getenv('OPENAI_API')
-    model = OpenAIModel(api_key=api_key)
-    model_management[user_id] = model
-    print("model dict", model_management)
-    '''
-    
     try:
         if text.startswith('/註冊'):
             api_key = text[3:].strip()
@@ -238,13 +231,16 @@ if __name__ == "__main__":
         try:
             if blob_client.exists():
                 data = Azblob.load_data(blob_client)
-            else:
-                blob_client.upload_blob("")
             
-            for  user_id in data.keys():
+            for user_id in data.keys():
                 print("user_id",user_id)
                 model_management[user_id] = OpenAIModel(api_key=data[user_id])
+
+            else:
+                blob_client.upload_blob("")
+
+
         except Exception as e:
-            print(e)
+            print("Failed to load blob...")
 
     app.run(host='0.0.0.0', port=8080)
