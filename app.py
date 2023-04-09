@@ -62,7 +62,7 @@ def handle_text_message(event):
 
         try:
             Azblob = azblob()
-            blob_client = Azblob.getClient(os.getenv('SAS_URI'))
+            blob_client = Azblob.getClient(os.getenv('AZURE_STORAGE_Account_Url'))
 
             for key, value in model_management.items():
                 Azblob.add_data(key, value)
@@ -230,7 +230,7 @@ if __name__ == "__main__":
     
     try:
         Azblob = azblob()
-        blob_client = Azblob.getClient(os.getenv('SAS_URI'))
+        blob_client = Azblob.getClient(os.getenv('AZURE_STORAGE_Account_Url'))
         if blob_client.exists():
             data = Azblob.load_data(blob_client)
             for user_id in data.keys():

@@ -10,7 +10,7 @@ class azblob():
         self.data_dict ={}
 
     def getClient(self,sas_url):
-        self.blob_service_client = BlobServiceClient(account_url = sas_url, token_credential = DefaultAzureCredential())
+        self.blob_service_client = BlobServiceClient(account_url = sas_url)
         self.blob_client = self.blob_service_client.get_blob_client(container=self.container_name, blob=self.blob_name)
         try:
              print("####Find blob_client####")
